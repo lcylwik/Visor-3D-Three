@@ -1,9 +1,10 @@
 import React from 'react';
+import Viewer from './Viewer3D/index'
 
 function App() {
   return (
-    <div>Viewer</div>
-  );
+      <Viewer />
+    );
 }
 
 export default App;

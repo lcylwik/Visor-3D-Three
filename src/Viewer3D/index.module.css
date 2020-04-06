@@ -1,0 +1,9 @@
+.Viewer{
+    width: 500px;
+    height: 500px;
+}
+
+.ViewerContainer {
+    display: flex;
+    justify-content: center;
+}
