@@ -1,0 +1,13 @@
+.OrientationContainer{
+    display: flex;
+    justify-content: space-evenly;
+    width: 500px;
+}
+
+.Items{
+    background-color: #e0ebff;
+    border-radius: 10px;
+    padding: 5px;
+    width: 100px;
+    text-align: center;
+}

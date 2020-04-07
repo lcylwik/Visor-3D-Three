@@ -1,9 +1,14 @@
 .Viewer{
-    width: 500px;
-    height: 500px;
+    width: 800px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .ViewerContainer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
