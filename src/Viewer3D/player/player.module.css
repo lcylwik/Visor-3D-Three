@@ -15,7 +15,7 @@
     justify-content: center;
 }
 
-.Play > img, .Prev > img, .Next > img{
+.Play > img, .Prev > img, .Next > img, .Stop > img{
    width: 25px;
    height: 25px;
 }

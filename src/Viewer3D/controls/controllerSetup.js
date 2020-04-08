@@ -76,25 +76,29 @@ export const setColorBoton = (step, active, NoActive) => {
     }
 }
 
-export const play = () => {
+export const play = (el, classHidden, refStop) => {
     if (!intervalPlay) {
-        playing();
+        playing(el, classHidden, refStop);
         intervalPlay = setInterval(() => {
-            playing();
+            playing(el, classHidden, refStop);
         }, 600)
+        removeClass(refStop, classHidden)
+        addClass(el, classHidden)
     }
 }
 
-const playing = () => {
+const playing = (refPlay, classHidden, refStop) => {
     if (state.currentStep + 1 < totalSteps) {
         refTL.children[state.currentStep + 1].click()
     } else {
-        stop();
+        stop(refStop, classHidden, refPlay)
     }
 }
 
-export const stop = () => {
+export const stop = (el, classHidden, refPlay) => {
     clearInterval(intervalPlay);
     intervalPlay = null;
+    addClass(el, classHidden)
+    removeClass(refPlay, classHidden)
 }
 
