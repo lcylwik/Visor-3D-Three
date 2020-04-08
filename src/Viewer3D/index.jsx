@@ -16,7 +16,9 @@ import {
   ControllerSetup,
   setColorBoton,
   play, 
-  stop
+  stop,
+  prev,
+  next
 } from './controls/controllerSetup';
 
 class Viewer extends Component {
@@ -167,7 +169,7 @@ class Viewer extends Component {
         <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
         <div className={styles.Controllers}>
-          <Player data={steps} onPlay={play} onStop={stop}></Player>
+          <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
           <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
         </div>
       </div>

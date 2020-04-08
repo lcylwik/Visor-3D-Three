@@ -102,3 +102,13 @@ export const stop = (el, classHidden, refPlay) => {
     removeClass(refPlay, classHidden)
 }
 
+export const prev = () => {
+    if (state.currentStep - 1 >= 0)
+    refTL.children[state.currentStep - 1].click()
+}
+
+export const next = () => {
+    if (state.currentStep + 1 < totalSteps)
+    refTL.children[state.currentStep + 1].click()
+}
+
