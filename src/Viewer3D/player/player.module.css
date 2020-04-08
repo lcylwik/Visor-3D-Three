@@ -1,0 +1,28 @@
+.PlayerContainer {
+    display: flex;
+    line-height: 36px;
+}
+
+.Butons {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    width: 50px;
+    align-items: center;
+    background-color: #0652f9;
+}
+
+.Play, Stop {
+    display: flex;
+    justify-content: center;
+}
+
+.Play > img{
+   width: 25px;
+   height: 25px;
+}
+
+.Stop{
+    display: none;
+}

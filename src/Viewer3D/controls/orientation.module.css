@@ -5,9 +5,10 @@
 }
 
 .Items{
-    background-color: #e0ebff;
+    background-color: #0652f9;
     border-radius: 10px;
     padding: 5px;
     width: 100px;
     text-align: center;
+    color: white;
 }

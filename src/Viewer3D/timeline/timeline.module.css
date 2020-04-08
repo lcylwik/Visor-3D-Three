@@ -4,10 +4,7 @@
 
 .StepsText {
     display: flex;
-    width: 60px;
-    display: flex;
     flex-direction: row;
-    line-height: 36px;
     color: #0652f9;
     cursor: default;
     font-size: 45px;
@@ -19,7 +16,7 @@
     letter-spacing: 0;
     color: #779cec;
     font-size: 30px;  
-    line-height: 44px;  
+    line-height: 50px;  
 }
 
 .ContainerStepsInline{

@@ -12,6 +12,7 @@ import { ControllerSetup } from './controls/controllerSetup';
 import { steps } from './steps/data.json'
 import AbstractDataModel from './models/modelsStore';
 import TimeLine from './timeline/timeline';
+import Player from './player/player';
 
 class Viewer extends Component {
 
@@ -52,7 +53,7 @@ class Viewer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.settingsControls();
-    if(this.state.loaded && prevState.loaded !== this.state.loaded) {
+    if (this.state.loaded && prevState.loaded !== this.state.loaded) {
       this.addModeltoScena(0);
     }
   }
@@ -109,7 +110,7 @@ class Viewer extends Component {
       el.name = "";
       this.models.set(key, el);
       this.scene.remove(el);
-    } 
+    }
   }
 
   loadAllStl = () => {
@@ -138,9 +139,9 @@ class Viewer extends Component {
       var largestDimension = Math.max(geometry.boundingBox.max.x,
         geometry.boundingBox.max.y, geometry.boundingBox.max.z)
       this.camera.position.z = largestDimension * 1.5;
-      
+
       this.models.save(mesh)
-      this.setState({loaded: true})
+      this.setState({ loaded: true })
     });
   }
 
@@ -156,7 +157,10 @@ class Viewer extends Component {
       <div className={styles.ViewerContainer}>
         <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
-        <TimeLine data={steps} changeStep={this.addModeltoScena} />
+        <div className={styles.Controllers}>
+          <Player data={steps} ></Player>
+          <TimeLine data={steps} changeStep={this.addModeltoScena} />
+        </div>
       </div>
     );
   }
