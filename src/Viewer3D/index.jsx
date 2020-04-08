@@ -1,10 +1,13 @@
 import React, { Component, createRef } from 'react';
-import styles from './index.module.css';
 import * as THREE from 'three';
-import { OrbitControls } from './controls/OrbitControls.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import TWEEN from '@tweenjs/tween.js';
+
+import styles from './index.module.css';
 import model from './assets/5.stl';
 import OrientationHeader from './controls/orientation';
+import * as SDCControls from './controls/SDCControls';
+import { ControllerSetup } from './controls/controllerSetup';
 
 class Viewer extends Component {
 
@@ -12,16 +15,36 @@ class Viewer extends Component {
     super(props);
 
     this.refViewer = createRef();
+    this.refOrientation = createRef();
+
     this.state = {
-      orientation: "front"
+      initialCamState: {
+        position: '',
+        rotation: ''
+      },
+      showingMandible: true,
+      showingMaxilla: true,
+      instantiated: false
     }
   }
 
   componentDidMount() {
+    this.controller = {
+      prev: "",
+      next: "",
+      orientation: this.refOrientation.current,
+      playBtn: "",
+      stopBtn: ""
+    };
+
     this.init();
-    this.settingsControls();
     this.setScene();
     this.loaderStl();
+    this.settingsControls();
+  }
+
+  componentDidUpdate() {
+    this.settingsControls();
   }
 
   init = () => {
@@ -33,24 +56,26 @@ class Viewer extends Component {
 
     this.renderer.setSize(widthContainer, heightContainer);
     this.refViewer.current.appendChild(this.renderer.domElement);
+
+    this.setState({
+      initialCamState: {
+        position: this.camera.position.clone(),
+        rotation: this.camera.rotation.clone()
+      }
+    })
   }
 
   settingsControls = () => {
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.rotateSpeed = 0.75;
-    this.controls.dampingFactor = 0.1;
-    this.controls.enableZoom = true;
-    this.controls.maxZoom = 100
-    // this.controls.autoRotate = true;
-    this.controls.autoRotateSpeed = .75;
-    this.controls.addEventListener( 'change', this.change );
-
+    let SDCControlsSettings = {
+      zoomSpeed: 2.2,
+      mouseSpeed: 0.18,
+      zoomInLimit: 3,
+      //zoomOutLimit: 12,
+    };
+    this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene);
+    ControllerSetup(this.scene, this.state, this.camera);
   }
 
-  change = (e) => {
-   
-  }
 
   setScene = () => {
     this.scene = new THREE.Scene();
@@ -110,68 +135,13 @@ class Viewer extends Component {
     requestAnimationFrame(this.animate);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
+    TWEEN.update()
   }
-
-  setOrientation = (ori) => {
-    if (this.state.orientation !== ori) {
-      this.setState({ orientation: ori })
-    }
-  }
-
-  changeDirection = (dir) => {
-    const go = dir;
-    if (this.state.orientation === go) return;
-
-    if (go === 'front' && this.state.orientation === 'left') {
-      this.intervalFront = setInterval(this.moveFrontSinceLeft, 20);
-    } else if (go === 'front' && this.state.orientation === 'rigth') {
-      this.intervalFront = setInterval(this.moveFrontSinceRigth, 20);
-    } else if (go === 'left')
-      this.intervalLeft = setInterval(this.moveLeft, 20);
-    else this.intervalRigth = setInterval(this.moveRigth, 20);
-  }
-
-  moveFrontSinceLeft = () => {
-    this.mesh.translateZ(Math.PI / 10)
-    this.mesh.rotateY(Math.PI / 50)
-    if (this.mesh.rotation._y > 0.15) {
-      clearInterval(this.intervalFront);
-      this.setOrientation('front');
-    }
-  }
-
-  moveFrontSinceRigth = () => {
-    this.mesh.rotateY(-Math.PI / 50)
-    this.mesh.translateZ(-Math.PI / 10)
-    if (this.mesh.rotation._y < 0.15) {
-      clearInterval(this.intervalFront);
-      this.setOrientation('front');
-    }
-  }
-
-  moveLeft = () => {
-    this.mesh.rotateY(-Math.PI / 50)
-    this.mesh.translateZ(-Math.PI / 10)
-    if (this.mesh.rotation._y < -0.9) {
-      clearInterval(this.intervalLeft);
-      this.setOrientation('left');
-    }
-  }
-
-  moveRigth = () => {
-    this.mesh.rotateY(Math.PI / 50)
-    this.mesh.translateZ(Math.PI / 10)
-    if (this.mesh.rotation._y > 1.3) {
-      clearInterval(this.intervalRigth);
-      this.setOrientation('rigth');
-    }
-  }
-
 
   render() {
     return (
       <div className={styles.ViewerContainer}>
-        <OrientationHeader changeDirection={this.changeDirection} />
+        <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
       </div>
     );

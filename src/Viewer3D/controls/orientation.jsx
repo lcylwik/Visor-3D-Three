@@ -1,12 +1,13 @@
 import React from 'react';
-import styles from './orientation.module.css'
+import styles from './orientation.module.css';
+import { clickHandlers } from './controllerSetup';
 
-const OrientationHeader = ({ changeDirection }) => {
+const OrientationHeader = ({ refOri }) => {
   return (
-      <div className={styles.OrientationContainer}>
-        <div onClick={(e) => changeDirection('front')}  className={`${styles.Frente} ${styles.Items}`}>Frente</div>
-        <div onClick={(e) => changeDirection('rigth')}  className={`${styles.Rigth} ${styles.Items}`}>Derecha</div>
-        <div onClick={(e) => changeDirection('left')}  className={`${styles.Left} ${styles.Items}`}>Izquierda</div>
+      <div ref={refOri} className={styles.OrientationContainer}>
+        <div onClick={(e) => clickHandlers(e)}  data-direction='front' className={`${styles.Frente} ${styles.Items}`}>Frente</div>
+        <div onClick={(e) => clickHandlers(e)}  data-direction='right' className={`${styles.Rigth} ${styles.Items}`}>Derecha</div>
+        <div onClick={(e) => clickHandlers(e)}  data-direction='left' className={`${styles.Left} ${styles.Items}`}>Izquierda</div>
       </div>
     );
 }
