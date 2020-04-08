@@ -4,10 +4,14 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import TWEEN from '@tweenjs/tween.js';
 
 import styles from './index.module.css';
-import model from './assets/5.stl';
+
 import OrientationHeader from './controls/orientation';
 import * as SDCControls from './controls/SDCControls';
 import { ControllerSetup } from './controls/controllerSetup';
+
+import { steps } from './steps/data.json'
+import AbstractDataModel from './models/modelsStore';
+import TimeLine from './timeline/timeline';
 
 class Viewer extends Component {
 
@@ -24,8 +28,11 @@ class Viewer extends Component {
       },
       showingMandible: true,
       showingMaxilla: true,
-      instantiated: false
+      instantiated: false,
+      loaded: false,
     }
+    this.models = new AbstractDataModel();
+
   }
 
   componentDidMount() {
@@ -39,17 +46,20 @@ class Viewer extends Component {
 
     this.init();
     this.setScene();
-    this.loaderStl();
+    this.loadAllStl();
     this.settingsControls();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.settingsControls();
+    if(this.state.loaded && prevState.loaded !== this.state.loaded) {
+      this.addModeltoScena(0);
+    }
   }
 
   init = () => {
     const widthContainer = this.refViewer.current.clientWidth - 100;
-    const heightContainer = this.refViewer.current.clientHeight - 100;
+    const heightContainer = this.refViewer.current.clientHeight;
 
     this.camera = new THREE.PerspectiveCamera(70, widthContainer / heightContainer, 0.01, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -67,7 +77,7 @@ class Viewer extends Component {
 
   settingsControls = () => {
     let SDCControlsSettings = {
-      zoomSpeed: 2.2,
+      zoomSpeed: 0.1,
       mouseSpeed: 0.18,
       zoomInLimit: 3,
       //zoomOutLimit: 12,
@@ -80,53 +90,52 @@ class Viewer extends Component {
   setScene = () => {
     this.scene = new THREE.Scene();
     this.scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
-
-    //	this.addShadowedLight( 1, 1, 1, 0xffffff, 0.35 );
-    //	this.addShadowedLight( 0.5, 1, - 1, 0xffaa00, 0.1);
+    this.scene.background = new THREE.Color(0xe0ebff);
   }
 
-  addShadowedLight(x, y, z, color, intensity) {
-
-    var directionalLight = new THREE.DirectionalLight(color, intensity);
-    directionalLight.position.set(x, y, z);
-    this.scene.add(directionalLight);
-
-    directionalLight.castShadow = true;
-
-    var d = 1;
-    directionalLight.shadow.camera.left = - d;
-    directionalLight.shadow.camera.right = d;
-    directionalLight.shadow.camera.top = d;
-    directionalLight.shadow.camera.bottom = - d;
-
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 4;
-
-    directionalLight.shadow.bias = - 0.002;
-
+  addModeltoScena = (step) => {
+    this.removeModelToScena()
+    if (this.models.has(step)) {
+      let model = this.models.get(step);
+      model.name = "currentStep"
+      this.scene.add(model);
+    }
   }
 
-  loaderStl = () => {
-    (new STLLoader()).load(model, (geometry) => {
+  removeModelToScena = () => {
+    let model = this.models.hasByName("currentStep");
+    if(model) this.scene.remove(model);
+  }
+
+  loadAllStl = () => {
+    steps.map((st, index) => {
+      let stl = require(`./assets/${st.id}.stl`);
+      this.loaderStl(stl, index);
+    });
+  }
+
+  loaderStl = (stl, index) => {
+    (new STLLoader()).load(stl, (geometry) => {
       let material = new THREE.MeshPhongMaterial({ color: 0xA3A3A3, specular: 100, shininess: 100 });
-      this.mesh = new THREE.Mesh(geometry, material);
-      this.scene.add(this.mesh);
+      let mesh = new THREE.Mesh(geometry, material);
 
       // Compute the middle
-      this.middle = new THREE.Vector3();
+      let middle = new THREE.Vector3();
       geometry.computeBoundingBox();
-      geometry.boundingBox.getCenter(this.middle);
+      geometry.boundingBox.getCenter(middle);
 
       // Center it
-      this.mesh.position.x = -1 * this.middle.x;
-      this.mesh.position.y = -1 * this.middle.y;
-      this.mesh.position.z = -1 * this.middle.z;
+      mesh.position.x = -1 * middle.x;
+      mesh.position.y = -1 * middle.y;
+      mesh.position.z = -1 * middle.z;
 
       // Pull the camera away as needed
       var largestDimension = Math.max(geometry.boundingBox.max.x,
         geometry.boundingBox.max.y, geometry.boundingBox.max.z)
       this.camera.position.z = largestDimension * 1.5;
-
+      
+      this.models.save(mesh)
+      this.setState({loaded: true})
       this.animate();
     });
   }
@@ -143,6 +152,7 @@ class Viewer extends Component {
       <div className={styles.ViewerContainer}>
         <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
+        <TimeLine data={steps}/>
       </div>
     );
   }

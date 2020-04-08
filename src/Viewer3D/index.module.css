@@ -1,6 +1,6 @@
 .Viewer{
-    width: 800px;
-    height: 600px;
+    width: 600px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,6 +9,7 @@
 .ViewerContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    height: 600px;
 }

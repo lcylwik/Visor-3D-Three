@@ -1,24 +1,24 @@
 {
     "steps": [
         {
-            "id": 0,
-            "stl": "./assets/1.stl"
-        },
-        {
             "id": 1,
-            "stl": "./assets/2.stl"
+            "stl": "../assets/1.stl"
         },
         {
             "id": 2,
-            "stl": "./assets/3.stl"
+            "stl": "../assets/2.stl"
         },
         {
             "id": 3,
-            "stl": "./assets/4.stl"
+            "stl": "../assets/3.stl"
         },
         {
             "id": 4,
-            "stl": "./assets/5.stl"
+            "stl": "../assets/4.stl"
+        },
+        {
+            "id": 5,
+            "stl": "../assets/5.stl"
         }
     ]
 }
