@@ -99,12 +99,17 @@ class Viewer extends Component {
       let model = this.models.get(step);
       model.name = "currentStep"
       this.scene.add(model);
+      this.animate();
     }
   }
 
   removeModelToScena = () => {
-    let model = this.models.hasByName("currentStep");
-    if(model) this.scene.remove(model);
+    let { el, key } = this.models.hasByName("currentStep");
+    if (el) {
+      el.name = "";
+      this.models.set(key, el);
+      this.scene.remove(el);
+    } 
   }
 
   loadAllStl = () => {
@@ -136,7 +141,6 @@ class Viewer extends Component {
       
       this.models.save(mesh)
       this.setState({loaded: true})
-      this.animate();
     });
   }
 
@@ -152,7 +156,7 @@ class Viewer extends Component {
       <div className={styles.ViewerContainer}>
         <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
-        <TimeLine data={steps}/>
+        <TimeLine data={steps} changeStep={this.addModeltoScena} />
       </div>
     );
   }

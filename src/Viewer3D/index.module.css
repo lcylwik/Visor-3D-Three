@@ -1,5 +1,5 @@
 .Viewer{
-    width: 600px;
+    width: 800px;
     height: 400px;
     display: flex;
     flex-direction: column;
@@ -11,5 +11,5 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: 600px;
+    height: 500px;
 }

@@ -37,11 +37,10 @@ class AbstractDataModel {
         for (const key in this.__elements) {
             const el = this.__elements[key].data;
             if (el.name === current) {
-                debugger
-                return el;
+                return {el, key};
             }
         }
-        return null;
+        return {};
     }
 
     unset(element) {
