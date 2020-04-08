@@ -1,12 +1,13 @@
 import TWEEN from '@tweenjs/tween.js';
 
-let camera, scene, controller, state;
+let camera, scene, refTL, state, totalSteps, intervalPlay;
 
-export const ControllerSetup = (sce, stateGlobal, cam) => {
-
+export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length) => {
     scene = sce;
     state = stateGlobal;
     camera = cam;
+    refTL = refTimeLine;
+    totalSteps = length;
 }
 
 export const clickHandlers = (e) => {
@@ -25,17 +26,14 @@ const setDirection = (dir) => {
         case 'left':
             makeAnimation(teeth, { x: 0, y: -Math.PI / 2, z: 0 });
             //cameraResetAnimation();
-            showAllTeeth();
             break;
         case 'right':
             makeAnimation(teeth, { x: 0, y: Math.PI / 2, z: 0 });
-           // cameraResetAnimation();
-            showAllTeeth();
+            // cameraResetAnimation();
             break;
         case 'front':
             makeAnimation(teeth, { x: 0, y: 0, z: 0 });
             //cameraResetAnimation();
-            showAllTeeth();
             break;
     }
 }
@@ -56,7 +54,47 @@ const cameraResetAnimation = () => {
     new TWEEN.Tween(camera.rotation).to(initialCamStateObj, 600).easing(TWEEN.Easing.Quadratic.InOut).start();
 };
 
-const showAllTeeth = () => {
+export const addClass = (el, myClass) => {
+    el.classList.add(myClass);
+}
 
+export const removeClass = (el, myClass) => {
+    el.classList.remove(myClass);
+}
+
+export const setColorBoton = (step, active, NoActive) => {
+    let childrens = refTL.children;
+    for (let i = 0; i < childrens.length; i++) {
+        const child = childrens[i];
+        if (i === step) {
+            removeClass(child, NoActive);
+            addClass(child, active);
+        } else {
+            addClass(child, NoActive);
+            removeClass(child, active);
+        }
+    }
+}
+
+export const play = () => {
+    if (!intervalPlay) {
+        playing();
+        intervalPlay = setInterval(() => {
+            playing();
+        }, 600)
+    }
+}
+
+const playing = () => {
+    if (state.currentStep + 1 < totalSteps) {
+        refTL.children[state.currentStep + 1].click()
+    } else {
+        stop();
+    }
+}
+
+export const stop = () => {
+    clearInterval(intervalPlay);
+    intervalPlay = null;
 }
 

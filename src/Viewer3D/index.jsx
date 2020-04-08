@@ -7,12 +7,17 @@ import styles from './index.module.css';
 
 import OrientationHeader from './controls/orientation';
 import * as SDCControls from './controls/SDCControls';
-import { ControllerSetup } from './controls/controllerSetup';
 
 import { steps } from './steps/data.json'
 import AbstractDataModel from './models/modelsStore';
 import TimeLine from './timeline/timeline';
 import Player from './player/player';
+import {
+  ControllerSetup,
+  setColorBoton,
+  play, 
+  stop
+} from './controls/controllerSetup';
 
 class Viewer extends Component {
 
@@ -21,6 +26,7 @@ class Viewer extends Component {
 
     this.refViewer = createRef();
     this.refOrientation = createRef();
+    this.refTimeLine = createRef();
 
     this.state = {
       initialCamState: {
@@ -31,6 +37,7 @@ class Viewer extends Component {
       showingMaxilla: true,
       instantiated: false,
       loaded: false,
+      currentStep: 0,
     }
     this.models = new AbstractDataModel();
 
@@ -49,6 +56,7 @@ class Viewer extends Component {
     this.setScene();
     this.loadAllStl();
     this.settingsControls();
+    setColorBoton(this.refTimeLine.current, 0, styles.Active, styles.NoActive)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -84,9 +92,8 @@ class Viewer extends Component {
       //zoomOutLimit: 12,
     };
     this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene);
-    ControllerSetup(this.scene, this.state, this.camera);
+    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length);
   }
-
 
   setScene = () => {
     this.scene = new THREE.Scene();
@@ -101,6 +108,8 @@ class Viewer extends Component {
       model.name = "currentStep"
       this.scene.add(model);
       this.animate();
+      setColorBoton(step, styles.Active, styles.NoActive)
+      this.setState({ currentStep: step })
     }
   }
 
@@ -158,8 +167,8 @@ class Viewer extends Component {
         <OrientationHeader refOri={this.refOrientation} />
         <div ref={this.refViewer} className={styles.Viewer} />
         <div className={styles.Controllers}>
-          <Player data={steps} ></Player>
-          <TimeLine data={steps} changeStep={this.addModeltoScena} />
+          <Player data={steps} onPlay={play} ></Player>
+          <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
         </div>
       </div>
     );

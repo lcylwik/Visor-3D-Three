@@ -20,3 +20,17 @@
     justify-content: center;
     align-items: center;
 }
+
+.Active {
+    color: #0652f9;
+    font-size: 100px;
+}
+
+.Active > span {
+    text-shadow: -0.2px -0.2px 0 #09090a, 0.2px -0.2px 0 #09090a, -0.2px 0.2px 0 #09090a, 0.2px 0.2px 0 #09090a;
+}
+
+.NoActive {
+    color: #779cec;
+    font-size: 88px;
+}

@@ -5,7 +5,6 @@
 .StepsText {
     display: flex;
     flex-direction: row;
-    color: #0652f9;
     cursor: default;
     font-size: 45px;
     transition: color 400ms;
@@ -15,6 +14,7 @@
     display: flex;
     letter-spacing: 0;
     color: #779cec;
+    opacity: 0.5;
     font-size: 30px;  
     line-height: 50px;  
 }
