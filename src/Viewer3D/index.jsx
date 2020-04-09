@@ -42,7 +42,6 @@ class Viewer extends Component {
       currentStep: 0,
     }
     this.models = new AbstractDataModel();
-
   }
 
   componentDidMount() {
@@ -59,6 +58,8 @@ class Viewer extends Component {
     this.loadAllStl();
     this.settingsControls();
     setColorBoton(this.refTimeLine.current, 0, styles.Active, styles.NoActive)
+    this.renderer.domElement.addEventListener("change", this.animate);
+    this.camera.addEventListener("change", this.animate);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -93,8 +94,9 @@ class Viewer extends Component {
       zoomInLimit: 3,
       //zoomOutLimit: 12,
     };
-    this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene);
-    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length);
+    this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene, this.animate);
+    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate);
+    this.controls.addEventListener('change',this.animate);
   }
 
   setScene = () => {
@@ -157,7 +159,8 @@ class Viewer extends Component {
   }
 
   animate = () => {
-    requestAnimationFrame(this.animate);
+    console.log("animate")
+    //requestAnimationFrame(this.animate);
     this.renderer.render(this.scene, this.camera);
     TWEEN.update()
   }

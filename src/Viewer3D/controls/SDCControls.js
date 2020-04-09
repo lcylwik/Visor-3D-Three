@@ -18,14 +18,17 @@ let state = {
 };
 let camera, scene, renderer;
 
+let Animate, id;
+
 let manipulationStartEvents = ['mousedown', 'touchstart'];
 let manipulationEndEvents = ['mouseup', 'mouseout', 'touchend'];
 let manipulationInProgressEvents = ['mousemove', 'touchmove'];
 
-const makeController = (config, cam, render, sce) => {
+const makeController = (config, cam, render, sce, animate) => {
     camera = cam;
     scene = sce;
     renderer = render;
+    Animate = animate;
 
     var controls = new OrbitControls(camera, renderer.domElement);
     controls.zoomSpeed = config.zoomSpeed;
@@ -119,6 +122,28 @@ const createDeltaMove = (relativePosition) => {
     };
 }
 
+const updateAll = () => {
+    requestAnimationFrame(function loop() {
+        Animate()
+        id = requestAnimationFrame(loop)
+    });
+}
+
+const stopUdate = () => {
+    if (id !== null) {
+        let interval = setInterval(() => {
+            console.log("start interval")
+            if(id === null) {
+                clearInterval(interval)
+                interval = null
+                console.log("stop interval")
+            }
+            cancelAnimationFrame(id); 
+            id = null;    
+        }, 50)
+    }
+}
+
 const controlStart = (e) => {
     detectTouchMode(e);
     state.isDragging = true;
@@ -129,10 +154,12 @@ const controlStart = (e) => {
     if (e.type === 'touchstart') {
         state.previousPosition = createRelativeEventPosition(e);
     }
+    updateAll()
 }
 
 const controlEnd = (event) => {
     state.isDragging = false;
+    stopUdate()
 }
 
 const controlRotation = (event) => {

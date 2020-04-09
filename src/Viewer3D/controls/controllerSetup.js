@@ -2,18 +2,20 @@ import TWEEN from '@tweenjs/tween.js';
 
 let camera, scene, refTL, state, totalSteps, intervalPlay;
 
-export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length) => {
+let Update, id;
+
+export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length, animate) => {
     scene = sce;
     state = stateGlobal;
     camera = cam;
     refTL = refTimeLine;
     totalSteps = length;
+    Update = animate;
 }
 
 export const clickHandlers = (e) => {
     let direction = e.target.dataset.direction;
     direction && setDirection(direction);
-    console.log(state)
 }
 
 const setDirection = (dir) => {
@@ -39,10 +41,48 @@ const setDirection = (dir) => {
 }
 
 const makeAnimation = function (teeth, xyz) {
-    let tween = new TWEEN.Tween(teeth.rotation).to(xyz, 600);
+    UpdateAll(teeth, xyz);
+    let tween = new TWEEN.Tween(teeth.rotation).to(xyz, 600)
     tween.easing(TWEEN.Easing.Quadratic.InOut)
-    tween.start();
+    tween.start()
 };
+
+const creteRequestFrame = () => {
+    requestAnimationFrame(function loop() {
+        Update()
+        id = requestAnimationFrame(loop)
+    });
+}
+
+const stopRequestFrame = (teeth, xyz) => {
+    let interval = setInterval(() => {
+        if (teeth.rotation.y === xyz.y && teeth.rotation.x === xyz.x && teeth.rotation.z === xyz.z) {
+            if (id === null) {
+                clearInterval(interval)
+                interval = null
+            }
+            console.log("stop interval")
+            cancelAnimationFrame(id);
+            id = null;
+        }
+    }, 50)
+}
+
+const stopReques = () => {
+    let interval = setInterval(() => {
+        console.log("start interval")
+        clearInterval(interval)
+        interval = null
+        console.log("stop interval")
+        cancelAnimationFrame(id);
+        id = null;
+    }, 50)
+}
+
+const UpdateAll = (teeth, xyz) => {
+    creteRequestFrame();
+    stopRequestFrame(teeth, xyz);
+}
 
 const cameraResetAnimation = () => {
     let initialCamStateObj = {
@@ -98,17 +138,18 @@ const playing = (refPlay, classHidden, refStop) => {
 export const stop = (el, classHidden, refPlay) => {
     clearInterval(intervalPlay);
     intervalPlay = null;
-    addClass(el, classHidden)
-    removeClass(refPlay, classHidden)
+    addClass(el, classHidden);
+    removeClass(refPlay, classHidden);
+    stopReques();
 }
 
 export const prev = () => {
     if (state.currentStep - 1 >= 0)
-    refTL.children[state.currentStep - 1].click()
+        refTL.children[state.currentStep - 1].click()
 }
 
 export const next = () => {
     if (state.currentStep + 1 < totalSteps)
-    refTL.children[state.currentStep + 1].click()
+        refTL.children[state.currentStep + 1].click()
 }
 
