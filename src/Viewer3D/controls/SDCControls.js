@@ -32,12 +32,9 @@ const makeController = (config, cam, render, sce, animate) => {
 
     var controls = new OrbitControls(camera, renderer.domElement);
     controls.zoomSpeed = config.zoomSpeed;
-    if (config.zoomInLimit) {
-        controls.minDistance = 2;
-    }
-    if (config.zoomOutLimit) {
-        controls.maxDistance = 4;
-    }
+    controls.minDistance = 10;
+    controls.maxDistance = 200;
+    controls.maxZoom = 1
     controls.enableZoom = true;
     controls.enablePan = false;
     controls.enableRotate = false;
@@ -125,21 +122,22 @@ const createDeltaMove = (relativePosition) => {
 const updateAll = () => {
     requestAnimationFrame(function loop() {
         Animate()
+        //console.log("inicializa request touch", id)
         id = requestAnimationFrame(loop)
     });
 }
 
 const stopUdate = () => {
-    if (id !== null) {
+    if (id !== undefined) {
         let interval = setInterval(() => {
-            console.log("start interval")
-            if(id === null) {
+            //console.log("start interval touch", id)
+            if (id === undefined) {
                 clearInterval(interval)
-                interval = null
-                console.log("stop interval")
+                interval = undefined
+                //console.log("stop interval touch", id)
             }
-            cancelAnimationFrame(id); 
-            id = null;    
+            cancelAnimationFrame(id);
+            id = undefined;
         }, 50)
     }
 }

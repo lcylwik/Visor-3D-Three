@@ -2,7 +2,7 @@ import TWEEN from '@tweenjs/tween.js';
 
 let camera, scene, refTL, state, totalSteps, intervalPlay;
 
-let Update, id;
+let Update, idRequest;
 
 export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length, animate) => {
     scene = sce;
@@ -27,15 +27,12 @@ const setDirection = (dir) => {
     switch (direction) {
         case 'left':
             makeAnimation(teeth, { x: 0, y: -Math.PI / 2, z: 0 });
-            //cameraResetAnimation();
             break;
         case 'right':
             makeAnimation(teeth, { x: 0, y: Math.PI / 2, z: 0 });
-            // cameraResetAnimation();
             break;
         case 'front':
             makeAnimation(teeth, { x: 0, y: 0, z: 0 });
-            //cameraResetAnimation();
             break;
     }
 }
@@ -50,32 +47,33 @@ const makeAnimation = function (teeth, xyz) {
 const creteRequestFrame = () => {
     requestAnimationFrame(function loop() {
         Update()
-        id = requestAnimationFrame(loop)
+        idRequest = requestAnimationFrame(loop)
     });
 }
 
 const stopRequestFrame = (teeth, xyz) => {
     let interval = setInterval(() => {
         if (teeth.rotation.y === xyz.y && teeth.rotation.x === xyz.x && teeth.rotation.z === xyz.z) {
-            if (id === null) {
+            if (idRequest === null) {
                 clearInterval(interval)
                 interval = null
+             //   console.log("stop interval translation", idRequest)
             }
-            console.log("stop interval")
-            cancelAnimationFrame(id);
-            id = null;
+            cancelAnimationFrame(idRequest);
+            idRequest = null;
         }
     }, 50)
 }
 
-const stopReques = () => {
+const stopRequest = () => {
     let interval = setInterval(() => {
-        console.log("start interval")
-        clearInterval(interval)
-        interval = null
-        console.log("stop interval")
-        cancelAnimationFrame(id);
-        id = null;
+        if (idRequest === null) {
+            clearInterval(interval)
+            interval = null;
+          //  console.log("stop interval player", idRequest)
+        }
+        cancelAnimationFrame(idRequest);
+        idRequest = null;
     }, 50)
 }
 
@@ -83,16 +81,6 @@ const UpdateAll = (teeth, xyz) => {
     creteRequestFrame();
     stopRequestFrame(teeth, xyz);
 }
-
-const cameraResetAnimation = () => {
-    let initialCamStateObj = {
-        x: state.initialCamState.position.x,
-        y: state.initialCamState.position.y,
-        z: state.initialCamState.position.z
-    };
-    new TWEEN.Tween(camera.position).to(initialCamStateObj, 600).easing(TWEEN.Easing.Quadratic.InOut).start();
-    new TWEEN.Tween(camera.rotation).to(initialCamStateObj, 600).easing(TWEEN.Easing.Quadratic.InOut).start();
-};
 
 export const addClass = (el, myClass) => {
     el.classList.add(myClass);
@@ -140,7 +128,7 @@ export const stop = (el, classHidden, refPlay) => {
     intervalPlay = null;
     addClass(el, classHidden);
     removeClass(refPlay, classHidden);
-    stopReques();
+    stopRequest();
 }
 
 export const prev = () => {
