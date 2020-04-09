@@ -1,7 +1,7 @@
 
 class AbstractDataModel {
     constructor() {
-        this.__elements = []; // Es un arreglo o un objeto?
+        this.__elements = []; 
     }
 
     get(element) {
