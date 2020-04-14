@@ -1,6 +1,8 @@
 .OrientationContainer{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 27px;
     /* width: 500px; */
 }
 
@@ -9,11 +11,10 @@
     align-items: center;
     justify-content: center;
 
-    width: 88px;
+    width: 27%;
     height: 36px;
     border-radius: 8px;
     border: solid 2px #0752f9;
-    margin: 0 15px;
 
     text-align: center;
     font-family: ModernEra;
@@ -30,3 +31,10 @@
     background-color: #0752f9;
     color: #ffffff;
 }
+
+@media (min-width: 700px) {
+    .OrientationContainer {
+         width: 400px; 
+         margin-top: 0;
+    }
+ }

@@ -16,7 +16,7 @@ import Player from './player/player';
 import {
   ControllerSetup,
   setColorBoton,
-  play, 
+  play,
   stop,
   prev,
   next
@@ -45,7 +45,7 @@ class Viewer extends Component {
     this.models = new AbstractDataModel();
     //this.setCredentials();
     this.name = "Lianet";
-   // this.readBucket();
+    // this.readBucket();
   }
 
   componentDidMount() {
@@ -100,7 +100,7 @@ class Viewer extends Component {
     };
     this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene, this.animate);
     ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate, this.refOrientation);
-    this.controls.addEventListener('change',this.animate);
+    this.controls.addEventListener('change', this.animate);
   }
 
   setScene = () => {
@@ -172,8 +172,8 @@ class Viewer extends Component {
   setCredentials = () => {
     AWS.config.update(
       {
-        accessKeyId: "AKIAIEJO74BYC7N3FO6A",
-        secretAccessKey: "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",
+        accessKeyId: "...",
+        secretAccessKey: "...",
       }
     );
   }
@@ -200,11 +200,13 @@ class Viewer extends Component {
       <div className={styles.ViewerContainer}>
         <div className={styles.TitleViewer}>{`${this.name}, ¡Tu nueva sonrisa te está esperando!`}</div>
         <div ref={this.refViewer} className={styles.Viewer} />
-        <div className={styles.Controllers}>
-          <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
-          <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+        <div className={styles.ControllersContainer}>
+          <div className={styles.Controllers}>
+            <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
+            <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+          </div>
+          <OrientationHeader refOri={this.refOrientation} />
         </div>
-        <OrientationHeader refOri={this.refOrientation} />
       </div>
     );
   }
