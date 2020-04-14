@@ -2,6 +2,7 @@ import React, { Component, createRef } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import TWEEN from '@tweenjs/tween.js';
+import AWS from 'aws-sdk';
 
 import styles from './index.module.css';
 
@@ -42,6 +43,9 @@ class Viewer extends Component {
       currentStep: 0,
     }
     this.models = new AbstractDataModel();
+    //this.setCredentials();
+    this.name = "Lianet";
+   // this.readBucket();
   }
 
   componentDidMount() {
@@ -70,8 +74,8 @@ class Viewer extends Component {
   }
 
   init = () => {
-    const widthContainer = this.refViewer.current.clientWidth - 100;
-    const heightContainer = this.refViewer.current.clientHeight;
+    const widthContainer = 335;
+    const heightContainer = 221;
 
     this.camera = new THREE.PerspectiveCamera(70, widthContainer / heightContainer, 0.01, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -95,7 +99,7 @@ class Viewer extends Component {
       //zoomOutLimit: 12,
     };
     this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene, this.animate);
-    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate);
+    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate, this.refOrientation);
     this.controls.addEventListener('change',this.animate);
   }
 
@@ -165,15 +169,42 @@ class Viewer extends Component {
     TWEEN.update()
   }
 
+  setCredentials = () => {
+    AWS.config.update(
+      {
+        accessKeyId: "AKIAIEJO74BYC7N3FO6A",
+        secretAccessKey: "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",
+      }
+    );
+  }
+
+  readBucket = () => {
+    debugger
+    let s3 = new AWS.S3();
+    s3.getObject(
+      { Bucket: "mystls", Key: "1.stl" },
+      function (error, data) {
+        debugger
+        if (error != null) {
+          console.log("Failed to retrieve an object: " + error);
+        } else {
+          console.log("Loaded " + data.ContentLength + " bytes");
+          // do something with data.Body
+        }
+      }
+    );
+  }
+
   render() {
     return (
       <div className={styles.ViewerContainer}>
-        <OrientationHeader refOri={this.refOrientation} />
+        <div className={styles.TitleViewer}>{`${this.name}, ¡Tu nueva sonrisa te está esperando!`}</div>
         <div ref={this.refViewer} className={styles.Viewer} />
         <div className={styles.Controllers}>
           <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
           <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
         </div>
+        <OrientationHeader refOri={this.refOrientation} />
       </div>
     );
   }

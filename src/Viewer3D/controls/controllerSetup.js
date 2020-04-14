@@ -1,28 +1,30 @@
 import TWEEN from '@tweenjs/tween.js';
 
-let camera, scene, refTL, state, totalSteps, intervalPlay;
+let camera, scene, refTL, refOri, state, totalSteps, intervalPlay;
 
 let Update, idRequest;
 
-export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length, animate) => {
+export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length, animate, refOrientation) => {
     scene = sce;
     state = stateGlobal;
     camera = cam;
     refTL = refTimeLine;
+    refOri = refOrientation;
     totalSteps = length;
     Update = animate;
 }
 
-export const clickHandlers = (e) => {
+export const clickHandlers = (e, active) => {
     let direction = e.target.dataset.direction;
-    direction && setDirection(direction);
+    if (direction) {
+        setDirection(direction);
+        changeColorBotons(e.target, active);
+    }  
 }
 
 const setDirection = (dir) => {
     let teeth = scene;
     let direction = dir.toLowerCase();
-
-    //controller.orientation activar className
 
     switch (direction) {
         case 'left':
@@ -34,6 +36,18 @@ const setDirection = (dir) => {
         case 'front':
             makeAnimation(teeth, { x: 0, y: 0, z: 0 });
             break;
+    }
+}
+
+const changeColorBotons = (element, active) => {
+    let childrens = refOri.current.children;
+    for (let i = 0; i < childrens.length; i++) {
+        const child = childrens[i];
+        if (element === child) {
+            addClass(child, active);
+        } else {
+            removeClass(child, active);
+        }        
     }
 }
 
@@ -93,7 +107,7 @@ export const removeClass = (el, myClass) => {
 export const setColorBoton = (step, active, NoActive) => {
     let childrens = refTL.children;
     for (let i = 0; i < childrens.length; i++) {
-        const child = childrens[i];
+        const child = childrens[i].firstChild;
         if (i === step) {
             removeClass(child, NoActive);
             addClass(child, active);

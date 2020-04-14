@@ -1,27 +1,41 @@
 .TimeLineContainer{
     display: flex;
+    justify-content: space-evenly;
+    width: 80%;
+    height: 16px;
+    border-radius: 8px;
+    background-color: #e9f2fe;
 }
 
 .StepsText {
     display: flex;
     flex-direction: row;
+    align-items: center;
     cursor: default;
-    font-size: 45px;
     transition: color 400ms;
+    justify-content: space-evenly;
+    justify-content: space-around;
+    flex-grow: 2;
+}
+
+.LastSteps{
+    flex-grow: 1;
 }
 
 .StepsInline {
     display: flex;
-    letter-spacing: 0;
     color: #779cec;
     opacity: 0.5;
-    font-size: 30px;  
-    line-height: 50px;  
 }
 
-.ContainerStepsInline{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width: 70px;
+.Circle {
+    border-radius: 50px;
+    width: 9px;
+    height: 9px;
+}
+
+.CircleInner {
+    width: 3px;
+    height: 3px;
+    background-color: #c1d8fd;
 }

@@ -1,14 +1,32 @@
 .OrientationContainer{
     display: flex;
     justify-content: space-evenly;
-    width: 500px;
+    /* width: 500px; */
 }
 
 .Items{
-    background-color: #0652f9;
-    border-radius: 10px;
-    padding: 5px;
-    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 88px;
+    height: 36px;
+    border-radius: 8px;
+    border: solid 2px #0752f9;
+    margin: 0 15px;
+
     text-align: center;
-    color: white;
+    font-family: ModernEra;
+    font-size: 15px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0752f9;
+}
+
+.Active{
+    background-color: #0752f9;
+    color: #ffffff;
 }
