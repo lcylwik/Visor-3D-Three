@@ -2,31 +2,23 @@
     "steps": [
         {
             "id": 1,
-            "stl": "../assets/1.stl"
+            "stl": "https://stl-demos.s3.amazonaws.com/1.stl"
         },
         {
             "id": 2,
-            "stl": "../assets/2.stl"
+            "stl": "https://stl-demos.s3.amazonaws.com/2.stl"
         },
         {
             "id": 3,
-            "stl": "../assets/3.stl"
+            "stl": "https://stl-demos.s3.amazonaws.com/3.stl"
         },
         {
             "id": 4,
-            "stl": "../assets/4.stl"
+            "stl": "https://stl-demos.s3.amazonaws.com/4.stl"
         },
         {
             "id": 5,
-            "stl": "../assets/5.stl"
-        },
-        {
-            "id": 1,
-            "stl": "../assets/1.stl"
-        },
-        {
-            "id": 2,
-            "stl": "../assets/2.stl"
+            "stl": "https://stl-demos.s3.amazonaws.com/5.stl"
         }
     ]
 }

@@ -98,6 +98,7 @@ class Viewer extends Component {
     const widthContainer = this.refViewer.current.clientWidth;
     const heightContainer = this.refViewer.current.clientWidth * 0.64;
     this.renderer.setSize(widthContainer, heightContainer);
+    this.animate()
   }
 
   settingsControls = () => {
@@ -108,7 +109,7 @@ class Viewer extends Component {
       //zoomOutLimit: 12,
     };
     this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene, this.animate);
-    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate, this.refOrientation);
+    ControllerSetup(this.scene, this.state, this.refTimeLine.current, steps.length, this.animate, this.refOrientation);
     this.controls.addEventListener('change', this.animate);
   }
 
@@ -140,7 +141,7 @@ class Viewer extends Component {
   }
 
   loadAllStl = () => {
-    steps.map((st, index) => {
+    steps.forEach((st, index) => {
       let stl = require(`./assets/${st.id}.stl`);
       this.loaderStl(stl, index);
     });

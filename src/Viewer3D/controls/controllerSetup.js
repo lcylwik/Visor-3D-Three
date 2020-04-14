@@ -1,13 +1,12 @@
 import TWEEN from '@tweenjs/tween.js';
 
-let camera, scene, refTL, refOri, state, totalSteps, intervalPlay;
+let scene, refTL, refOri, state, totalSteps, intervalPlay;
 
 let Update, idRequest;
 
-export const ControllerSetup = (sce, stateGlobal, cam, refTimeLine, length, animate, refOrientation) => {
+export const ControllerSetup = (sce, stateGlobal, refTimeLine, length, animate, refOrientation) => {
     scene = sce;
     state = stateGlobal;
-    camera = cam;
     refTL = refTimeLine;
     refOri = refOrientation;
     totalSteps = length;
@@ -19,7 +18,7 @@ export const clickHandlers = (e, active) => {
     if (direction) {
         setDirection(direction);
         changeColorBotons(e.target, active);
-    }  
+    }
 }
 
 const setDirection = (dir) => {
@@ -36,6 +35,9 @@ const setDirection = (dir) => {
         case 'front':
             makeAnimation(teeth, { x: 0, y: 0, z: 0 });
             break;
+        default:
+            makeAnimation(teeth, { x: 0, y: 0, z: 0 });
+            break;
     }
 }
 
@@ -47,7 +49,7 @@ const changeColorBotons = (element, active) => {
             addClass(child, active);
         } else {
             removeClass(child, active);
-        }        
+        }
     }
 }
 
@@ -71,7 +73,7 @@ const stopRequestFrame = (teeth, xyz) => {
             if (idRequest === null) {
                 clearInterval(interval)
                 interval = null
-             //   console.log("stop interval translation", idRequest)
+                //   console.log("stop interval translation", idRequest)
             }
             cancelAnimationFrame(idRequest);
             idRequest = null;
@@ -84,7 +86,7 @@ const stopRequest = () => {
         if (idRequest === null) {
             clearInterval(interval)
             interval = null;
-          //  console.log("stop interval player", idRequest)
+            //  console.log("stop interval player", idRequest)
         }
         cancelAnimationFrame(idRequest);
         idRequest = null;

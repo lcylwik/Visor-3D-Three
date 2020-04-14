@@ -2,8 +2,6 @@ import React, { useRef } from 'react';
 import styles from './player.module.css';
 import play from '../assets/play.svg';
 import stop from '../assets/stop.svg';
-import next from '../assets/next.svg';
-import prev from '../assets/before.svg';
 
 const Player = ({ data, onPlay, onStop, onPrev, onNext }) => {
 
