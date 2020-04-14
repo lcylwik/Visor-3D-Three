@@ -191,7 +191,9 @@ class Viewer extends Component {
             </div>
             <OrientationHeader refOri={this.refOrientation} />
           </div>
-          <div className={styles.Description}>Este modelo 3D es una simulación de tus resultados. Usa tus moons 22 horas al día, todos los días, durante el tiempo mencionado en este plan. Retíralos sólo para comer o beber, y procedimientos de higiene dental.</div>
+          <div className={styles.Description}>Este modelo 3D es una simulación de tus resultados.
+          Usa tus moons 22 horas al día, todos los días, durante el tiempo mencionado en este plan.
+          Retíralos sólo para comer o beber, y procedimientos de higiene dental.</div>
         </div>
       </div>
     );
