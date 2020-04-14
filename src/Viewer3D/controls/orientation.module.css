@@ -1,6 +1,6 @@
 .OrientationContainer{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     margin-top: 9%;
     width: 100%;
@@ -31,3 +31,13 @@
     background-color: #0752f9;
     color: #ffffff;
 }
+
+@media (min-width: 700px) {
+    .OrientationContainer{
+        justify-content: flex-end;
+    }
+
+    .Items {
+        margin-left: 15px;
+    }
+ }
