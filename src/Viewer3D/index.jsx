@@ -2,7 +2,6 @@ import React, { Component, createRef } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import TWEEN from '@tweenjs/tween.js';
-import AWS from 'aws-sdk';
 
 import styles from './index.module.css';
 
@@ -43,9 +42,7 @@ class Viewer extends Component {
       currentStep: 0,
     }
     this.models = new AbstractDataModel();
-    //this.setCredentials();
-    this.name = "Lianet";
-    // this.readBucket();
+    this.name = "Maria";
   }
 
   componentDidMount() {
@@ -62,8 +59,6 @@ class Viewer extends Component {
     this.loadAllStl();
     this.settingsControls();
     setColorBoton(this.refTimeLine.current, 0, styles.Active, styles.NoActive)
-    this.renderer.domElement.addEventListener("change", this.animate);
-    this.camera.addEventListener("change", this.animate);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -73,9 +68,17 @@ class Viewer extends Component {
     }
   }
 
+  componentWillMount() {
+    window.addEventListener('resize', this.updateSize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateSize);
+  }
+
   init = () => {
-    const widthContainer = 335;
-    const heightContainer = 221;
+    const widthContainer = this.refViewer.current.clientWidth;
+    const heightContainer = this.refViewer.current.clientWidth * 0.64;
 
     this.camera = new THREE.PerspectiveCamera(70, widthContainer / heightContainer, 0.01, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -89,6 +92,12 @@ class Viewer extends Component {
         rotation: this.camera.rotation.clone()
       }
     })
+  }
+
+  updateSize = () => {
+    const widthContainer = this.refViewer.current.clientWidth;
+    const heightContainer = this.refViewer.current.clientWidth * 0.64;
+    this.renderer.setSize(widthContainer, heightContainer);
   }
 
   settingsControls = () => {
@@ -169,43 +178,20 @@ class Viewer extends Component {
     TWEEN.update()
   }
 
-  setCredentials = () => {
-    AWS.config.update(
-      {
-        accessKeyId: "...",
-        secretAccessKey: "...",
-      }
-    );
-  }
-
-  readBucket = () => {
-    debugger
-    let s3 = new AWS.S3();
-    s3.getObject(
-      { Bucket: "mystls", Key: "1.stl" },
-      function (error, data) {
-        debugger
-        if (error != null) {
-          console.log("Failed to retrieve an object: " + error);
-        } else {
-          console.log("Loaded " + data.ContentLength + " bytes");
-          // do something with data.Body
-        }
-      }
-    );
-  }
-
   render() {
     return (
       <div className={styles.ViewerContainer}>
-        <div className={styles.TitleViewer}>{`${this.name}, ¡Tu nueva sonrisa te está esperando!`}</div>
-        <div ref={this.refViewer} className={styles.Viewer} />
-        <div className={styles.ControllersContainer}>
-          <div className={styles.Controllers}>
-            <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
-            <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+        <div className={styles.Wrapper}>
+          <div className={styles.TitleViewer}>{`${this.name}, ¡Tu nueva sonrisa te está esperando!`}</div>
+          <div ref={this.refViewer} className={styles.Viewer} />
+          <div className={styles.ControllersContainer}>
+            <div className={styles.Controllers}>
+              <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
+              <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+            </div>
+            <OrientationHeader refOri={this.refOrientation} />
           </div>
-          <OrientationHeader refOri={this.refOrientation} />
+          <div className={styles.Description}>Este modelo 3D es una simulación de tus resultados. Usa tus moons 22 horas al día, todos los días, durante el tiempo mencionado en este plan. Retíralos sólo para comer o beber, y procedimientos de higiene dental.</div>
         </div>
       </div>
     );
