@@ -7,7 +7,6 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 150px;
 }
 
 .Play, .Next, .Prev {
@@ -16,18 +15,18 @@
 }
 
 .Play > img, .Prev > img, .Next > img, .Stop > img{
-   width: 25px;
-   height: 25px;
+    width: 13px;
+    height: 12px;
 }
 
 .Stop, .Play {
-    background-color: #0652f9;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 25px;
-    width: 50px;
-    height: 50px;
+    width: 39px;
+    height: 31px;
+    border-radius: 7px;
+    background-color: #0752f9;
 }
 
 .Hidden {

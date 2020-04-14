@@ -19,6 +19,14 @@
         {
             "id": 5,
             "stl": "../assets/5.stl"
+        },
+        {
+            "id": 1,
+            "stl": "../assets/1.stl"
+        },
+        {
+            "id": 2,
+            "stl": "../assets/2.stl"
         }
     ]
 }

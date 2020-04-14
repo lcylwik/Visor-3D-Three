@@ -15,7 +15,7 @@ import Player from './player/player';
 import {
   ControllerSetup,
   setColorBoton,
-  play, 
+  play,
   stop,
   prev,
   next
@@ -42,6 +42,7 @@ class Viewer extends Component {
       currentStep: 0,
     }
     this.models = new AbstractDataModel();
+    this.name = "Maria";
   }
 
   componentDidMount() {
@@ -58,8 +59,6 @@ class Viewer extends Component {
     this.loadAllStl();
     this.settingsControls();
     setColorBoton(this.refTimeLine.current, 0, styles.Active, styles.NoActive)
-    this.renderer.domElement.addEventListener("change", this.animate);
-    this.camera.addEventListener("change", this.animate);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -69,9 +68,17 @@ class Viewer extends Component {
     }
   }
 
+  componentWillMount() {
+    window.addEventListener('resize', this.updateSize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateSize);
+  }
+
   init = () => {
-    const widthContainer = this.refViewer.current.clientWidth - 100;
-    const heightContainer = this.refViewer.current.clientHeight;
+    const widthContainer = this.refViewer.current.clientWidth;
+    const heightContainer = this.refViewer.current.clientWidth * 0.64;
 
     this.camera = new THREE.PerspectiveCamera(70, widthContainer / heightContainer, 0.01, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -87,6 +94,12 @@ class Viewer extends Component {
     })
   }
 
+  updateSize = () => {
+    const widthContainer = this.refViewer.current.clientWidth;
+    const heightContainer = this.refViewer.current.clientWidth * 0.64;
+    this.renderer.setSize(widthContainer, heightContainer);
+  }
+
   settingsControls = () => {
     let SDCControlsSettings = {
       zoomSpeed: 0.1,
@@ -95,8 +108,8 @@ class Viewer extends Component {
       //zoomOutLimit: 12,
     };
     this.controls = SDCControls.makeController(SDCControlsSettings, this.camera, this.renderer, this.scene, this.animate);
-    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate);
-    this.controls.addEventListener('change',this.animate);
+    ControllerSetup(this.scene, this.state, this.camera, this.refTimeLine.current, steps.length, this.animate, this.refOrientation);
+    this.controls.addEventListener('change', this.animate);
   }
 
   setScene = () => {
@@ -168,11 +181,17 @@ class Viewer extends Component {
   render() {
     return (
       <div className={styles.ViewerContainer}>
-        <OrientationHeader refOri={this.refOrientation} />
-        <div ref={this.refViewer} className={styles.Viewer} />
-        <div className={styles.Controllers}>
-          <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
-          <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+        <div className={styles.Wrapper}>
+          <div className={styles.TitleViewer}>{`${this.name}, ¡Tu nueva sonrisa te está esperando!`}</div>
+          <div ref={this.refViewer} className={styles.Viewer} />
+          <div className={styles.ControllersContainer}>
+            <div className={styles.Controllers}>
+              <Player data={steps} onPlay={play} onStop={stop} onPrev={prev} onNext={next}></Player>
+              <TimeLine refTL={this.refTimeLine} data={steps} changeStep={this.addModeltoScena} />
+            </div>
+            <OrientationHeader refOri={this.refOrientation} />
+          </div>
+          <div className={styles.Description}>Este modelo 3D es una simulación de tus resultados. Usa tus moons 22 horas al día, todos los días, durante el tiempo mencionado en este plan. Retíralos sólo para comer o beber, y procedimientos de higiene dental.</div>
         </div>
       </div>
     );
